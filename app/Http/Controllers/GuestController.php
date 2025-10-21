@@ -232,7 +232,7 @@ class GuestController extends Controller
     public function uploadInvitation(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|mimes:png|max:2048',
+            'image' => 'required|image|mimes:png|max:5048',
         ]);
 
         // Файлды сактоо
