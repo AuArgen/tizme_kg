@@ -131,7 +131,7 @@
         <div class="drawer-side">
             <label for="my-drawer-2" class="drawer-overlay"></label>
             <div class="p-4 w-80 min-h-full bg-base-200 text-base-content">
-                <div class="flex justify-between items-center mb-2">
+                <div class="flex justify-between items-center mt-[60px] md:mt-[0px] mb-2">
                     <h2 class="text-xl font-bold">Папки</h2>
                     <button @click="openFolderModal()" class="btn btn-primary btn-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /></svg>
