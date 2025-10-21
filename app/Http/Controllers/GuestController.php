@@ -146,9 +146,6 @@ class GuestController extends Controller
             'phone' => [
                 'required',
                 'string',
-                Rule::unique('guests')->where(function ($query) use ($user) {
-                    return $query->where('id_user', $user->id);
-                }),
             ],
             'nickname' => 'nullable|string',
             'info' => 'nullable|string',
@@ -156,7 +153,6 @@ class GuestController extends Controller
         ], [
             'name.required' => 'Коноктун аты-жөнүн жазыңыз. / Введите имя гостя.',
             'phone.required' => 'Телефон номерин жазыңыз. / Введите номер телефона.',
-            'phone.unique' => 'Бул телефон номери менен конок мурунтан эле бар. / Гость с таким номером телефона уже существует.',
         ]);
 
         if ($validator->fails()) {
@@ -188,9 +184,7 @@ class GuestController extends Controller
             'phone' => [
                 'required',
                 'string',
-                Rule::unique('guests')->where(function ($query) use ($user) {
-                    return $query->where('id_user', $user->id);
-                })->ignore($guest->id),
+//
             ],
             'nickname' => 'nullable|string',
             'info' => 'nullable|string',
@@ -198,7 +192,6 @@ class GuestController extends Controller
         ], [
             'name.required' => 'Коноктун аты-жөнүн жазыңыз. / Введите имя гостя.',
             'phone.required' => 'Телефон номерин жазыңыз. / Введите номер телефона.',
-            'phone.unique' => 'Бул телефон номери менен конок мурунтан эле бар. / Гость с таким номером телефона уже существует.',
         ]);
 
         if ($validator->fails()) {
