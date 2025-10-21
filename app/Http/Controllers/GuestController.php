@@ -6,7 +6,6 @@ use App\Models\Folder;
 use App\Models\Guest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -15,39 +14,38 @@ class GuestController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $query = $request->input('search');
+        $searchQuery = $request->input('search');
         $perPage = $request->input('per_page', 10);
-        $selectedFolderId = $request->input('folder_id');
+        $folderId = $request->input('folder_id');
 
-        // Recursively load folders with guest counts
+        // Get all folders with their guest counts for the sidebar
         $folders = Folder::where('id_user', $user->id)
-            ->whereNull('id_parent')
             ->withCount('guests')
-            ->with([
-                'children' => function ($query) {
-                    $query->withCount('guests')->with(['children' => function($q) { $q->withCount('guests')->with('children');}]);
-                }
-            ])
+            ->with(['children' => function ($query) {
+                $query->withCount('guests');
+            }])
+            ->whereNull('id_parent')
             ->get();
 
-        $guestsQuery = Guest::where('id_user', $user->id);
+        // Base query for guests
+        $guestsQuery = Guest::where('id_user', $user->id)->with('folder');
 
-        // Case-insensitive search for SQLite and other DBs
-        if ($query) {
-            $guestsQuery->where(function ($q) use ($query) {
-                $q->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($query) . '%')
-                  ->orWhere('phone', 'like', "%{$query}%");
+        // Apply search filter (case-insensitive)
+        if ($searchQuery) {
+            $guestsQuery->where(function ($q) use ($searchQuery) {
+                $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($searchQuery) . '%'])
+                  ->orWhereRaw('LOWER(phone) LIKE ?', ['%' . strtolower($searchQuery) . '%']);
             });
         }
 
-        // Filter by folder
-        if ($selectedFolderId) {
-            $guestsQuery->where('id_folder', $selectedFolderId);
+        // Apply folder filter
+        if ($folderId) {
+            $guestsQuery->where('id_folder', $folderId);
         }
 
-        $guests = $guestsQuery->with('folder')->paginate($perPage);
+        $guests = $guestsQuery->latest()->paginate($perPage);
 
-        return view('client.index', compact('folders', 'guests', 'perPage', 'query', 'selectedFolderId'));
+        return view('client.index', compact('folders', 'guests', 'perPage', 'searchQuery', 'folderId'));
     }
 
     public function storeFolder(Request $request)
@@ -144,13 +142,20 @@ class GuestController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'phone' => 'required|string',
+            'phone' => [
+                'required',
+                'string',
+                Rule::unique('guests')->where(function ($query) use ($user) {
+                    return $query->where('id_user', $user->id);
+                }),
+            ],
             'nickname' => 'nullable|string',
             'info' => 'nullable|string',
             'id_folder' => 'nullable|exists:folders,id,id_user,' . $user->id,
         ], [
             'name.required' => 'Коноктун аты-жөнүн жазыңыз. / Введите имя гостя.',
             'phone.required' => 'Телефон номерин жазыңыз. / Введите номер телефона.',
+            'phone.unique' => 'Бул телефон номери менен конок мурунтан эле бар. / Гость с таким номером телефона уже существует.',
         ]);
 
         if ($validator->fails()) {
@@ -179,13 +184,20 @@ class GuestController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'phone' => 'required|string',
+            'phone' => [
+                'required',
+                'string',
+                Rule::unique('guests')->where(function ($query) use ($user) {
+                    return $query->where('id_user', $user->id);
+                })->ignore($guest->id),
+            ],
             'nickname' => 'nullable|string',
             'info' => 'nullable|string',
             'id_folder' => 'nullable|exists:folders,id,id_user,' . $user->id,
         ], [
             'name.required' => 'Коноктун аты-жөнүн жазыңыз. / Введите имя гостя.',
             'phone.required' => 'Телефон номерин жазыңыз. / Введите номер телефона.',
+            'phone.unique' => 'Бул телефон номери менен конок мурунтан эле бар. / Гость с таким номером телефона уже существует.',
         ]);
 
         if ($validator->fails()) {

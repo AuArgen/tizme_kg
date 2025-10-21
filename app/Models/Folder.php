@@ -35,4 +35,33 @@ class Folder extends Model
     {
         return $this->hasMany(Guest::class, 'id_folder');
     }
+
+    /**
+     * Recursive relationship to get all children and their guest counts.
+     */
+    public function childrenRecursive()
+    {
+        // Eager load children and their guest counts recursively
+        return $this->children()->with('childrenRecursive')->withCount('guests');
+    }
+
+    /**
+     * Accessor to get the total number of guests in this folder and all sub-folders.
+     * This requires the childrenRecursive relationship to be loaded.
+     */
+    public function getTotalGuestsCountAttribute()
+    {
+        // Start with the count of guests directly in this folder
+        // The `guests_count` attribute must be loaded with withCount() in the query
+        $count = $this->guests_count ?? 0;
+
+        // If the recursive children relationship is loaded, iterate and add their counts
+        if ($this->relationLoaded('childrenRecursive')) {
+            foreach ($this->childrenRecursive as $child) {
+                $count += $child->total_guests_count; // Recursively call the accessor for each child
+            }
+        }
+
+        return $count;
+    }
 }
