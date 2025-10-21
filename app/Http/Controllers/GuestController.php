@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Intervention\Image\Facades\Image;
+//use Intervention\Image\Facades\Image;
 
 class GuestController extends Controller
 {
@@ -226,28 +226,35 @@ class GuestController extends Controller
     public function uploadInvitation(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|mimes:png,jpg,jpeg|max:5048', // 5МБга чейин
+            'image' => 'required|image|mimes:png,jpg,jpeg|max:5048',
         ]);
 
-        $image = $request->file('image');
-
-        // Intervention Image менен сүрөттү жүктөө
-        $img = Image::make($image->getPathname());
-
-        // Сүрөттү кысуу жана PNG/JPG форматына өткөрүү
-        // quality = 70 -> 70% сапат
-        $img->encode('jpg', 70);
-
-        // Файл атын түзүү
+        $file = $request->file('image');
         $fileName = 'invitation-' . time() . '.jpg';
+        $path = storage_path('app/public/invitations/' . $fileName);
 
-        // Файлды сактоо (storage/app/public/invitations)
-        Storage::disk('public')->put('invitations/' . $fileName, (string) $img);
+        // PNG же JPG болсо да PHP GD менен кысуу
+        $imgInfo = getimagesize($file->getPathname());
+        $mime = $imgInfo['mime'];
 
-        // Толук URL түзүү
+        if ($mime == 'image/png') {
+            $image = imagecreatefrompng($file->getPathname());
+        } elseif ($mime == 'image/jpeg' || $mime == 'image/jpg') {
+            $image = imagecreatefromjpeg($file->getPathname());
+        } else {
+            return response()->json(['error' => 'Unsupported image type'], 400);
+        }
+
+        // JPEG катары сактоо, сапат 70%
+        imagejpeg($image, $path, 70);
+
+        // Эсте сактап коюу
+        imagedestroy($image);
+
         $fullUrl = asset('storage/invitations/' . $fileName);
 
         return response()->json(['url' => $fullUrl]);
     }
+
 
 }
