@@ -7,7 +7,7 @@
     /* Custom font for invitations */
     @font-face {
         font-family: 'Anastasia Script';
-        src: url('{{ asset("public/font/AnastasiaScript.ttf") }}') format('truetype');
+        src: url('{{ asset("font/AnastasiaScript.ttf") }}') format('truetype');
     }
 </style>
 @endpush
@@ -115,8 +115,8 @@
                                         <div class="dropdown dropdown-end">
                                             <label tabindex="0" class="btn btn-primary btn-sm">Чакыруу</label>
                                             <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-[10]">
-                                                <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_one_2.png') }}')">Чакыруу 1</a></li>
-                                                <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_two_2.png') }}')">Чакыруу 2</a></li>
+                                                <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_one.png') }}')">Чакыруу 1</a></li>
+                                                <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_two.png') }}')">Чакыруу 2</a></li>
                                             </ul>
                                         </div>
                                         <button @click="openGuestModal(true, {{ json_encode($guest) }})" class="btn btn-ghost btn-sm btn-square" title="Редактировать">
@@ -141,7 +141,7 @@
         </div>
 
         {{-- Sidebar with Folders --}}
-        <div class="drawer-side mt-[60px] mb:mt-[0]">
+        <div class="drawer-side">
             <label for="my-drawer-2" class="drawer-overlay"></label>
             <div class="p-4 w-80 min-h-full bg-base-200 text-base-content">
                 <div class="flex justify-between items-center mb-4">
@@ -226,16 +226,15 @@ function guestManager() {
 
                 // --- Text Styling ---
                 const guestName = this.invitationGuest.name;
-                const fontSize = 57;
+                const fontSize = 50;
                 const font = `'Anastasia Script', cursive`;
                 ctx.font = `${fontSize}px ${font}`;
                 ctx.fillStyle = '#fff'; // Text color
                 ctx.textAlign = 'center';
 
                 // --- Positioning ---
-                // Convert 6cm to pixels (assuming 96 DPI)
                 const topMarginCm = 12.5;
-                const cmToPx = 37.795; // 1cm = 37.795px at 96 DPI
+                const cmToPx = 37.795;
                 const yPosition = topMarginCm * cmToPx;
                 const xPosition = canvas.width / 2 - 50;
 
@@ -276,7 +275,70 @@ function guestManager() {
             } else {
                 alert('Бул браузерде бөлүшүү мүмкүн эмес. / Функция поделиться не поддерживается в этом браузере.');
             }
+        },
+
+        async sendToWhatsAppNumber() {
+            if (!this.generatedImageBlob) {
+                alert('Сүрөт даяр эмес. / Изображение не готово.');
+                return;
+            }
+            if (!this.invitationGuest.phone) {
+                alert('Бул коноктун телефон номери көрсөтүлгөн эмес. / У этого гостя не указан номер телефона.');
+                return;
+            }
+
+            this.invitationLoading = true;
+
+            const formData = new FormData();
+            formData.append('image', this.generatedImageBlob, 'invitation.png');
+
+            try {
+                const response = await fetch('{{ route("client.invitation.upload") }}', {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Server error while uploading image.');
+
+                const result = await response.json();
+                const imageUrl = result.url;
+
+                const phoneNumber = this.invitationGuest.phone.replace(/\D/g, '');
+                const guestName = this.invitationGuest.name;
+                const text = `Урматтуу ${guestName}, сизди тойго чакырабыз!\n\n${imageUrl}`;
+                const encodedText = encodeURIComponent(text);
+                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedText}`;
+
+                // Показываем выбор пользователю
+                const choice = confirm(
+                    'Сиз каалайсызбы сүрөттү дароо ачуу же жүктөп алуу?\n\n' +
+                    'OK → Ачуу WhatsApp\n' +
+                    'Cancel → Жүктөп алуу'
+                );
+
+                if (choice) {
+                    // Вариант 1: открыть WhatsApp с ссылкой
+                    window.open(whatsappUrl, '_blank');
+                } else {
+                    // Вариант 2: скачать картинку напрямую
+                    const link = document.createElement('a');
+                    link.href = imageUrl;
+                    link.download = 'invitation.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    alert('Сүрөт жүктөлдү, эми аны WhatsApp аркылуу жөнөтө аласыз.');
+                }
+
+            } catch (error) {
+                console.error('Upload failed:', error);
+                alert('Сүрөттү жүктөөдө ката кетти. / Ошибка при загрузке изображения.');
+            } finally {
+                this.invitationLoading = false;
+            }
         }
+
     };
 }
 </script>

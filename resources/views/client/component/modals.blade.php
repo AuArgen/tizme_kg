@@ -103,10 +103,14 @@
 
         <div x-show="!invitationLoading" class="space-y-4">
             <canvas id="invitationCanvas" class="w-full h-auto rounded-lg shadow-lg"></canvas>
-            <div class="modal-action">
-                <button type="button" @click="shareInvitation()" class="btn btn-success">
+            <div class="modal-action justify-center gap-4">
+                <button type="button" @click="shareInvitation()" class="btn btn-info">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" /></svg>
-                    WhatsApp'ка жөнөтүү
+                    Бөлүшүү
+                </button>
+                 <button type="button" @click="sendToWhatsAppNumber()" class="btn btn-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.487 5.235 3.487 8.413 0 6.557-5.338 11.892-11.894 11.892-1.99 0-3.903-.52-5.586-1.457l-6.354 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.447-4.435-9.884-9.888-9.884-5.448 0-9.886 4.434-9.889 9.885-.002 2.024.604 3.965 1.698 5.616l-1.017 3.716 3.717-1.017z"/></svg>
+                    Номерге жөнөтүү
                 </button>
             </div>
         </div>

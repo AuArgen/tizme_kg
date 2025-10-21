@@ -6,6 +6,7 @@ use App\Models\Folder;
 use App\Models\Guest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -227,4 +228,20 @@ class GuestController extends Controller
 
         return back()->with('success_guest', 'Конок ийгиликтүү өчүрүлдү. / Гость успешно удален.');
     }
+
+    public function uploadInvitation(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:png|max:2048',
+        ]);
+
+        // Файлды сактоо
+        $path = $request->file('image')->store('invitations', 'public');
+
+        // Толук URL түзүү
+        $fullUrl = asset('storage/' . $path);
+
+        return response()->json(['url' => $fullUrl]);
+    }
+
 }
