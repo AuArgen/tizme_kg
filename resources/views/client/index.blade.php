@@ -141,7 +141,7 @@
         </div>
 
         {{-- Sidebar with Folders --}}
-        <div class="drawer-side">
+        <div class="drawer-side mt-[60px] md:mt-[0px]">
             <label for="my-drawer-2" class="drawer-overlay"></label>
             <div class="p-4 w-80 min-h-full bg-base-200 text-base-content">
                 <div class="flex justify-between items-center mb-4">
