@@ -77,7 +77,7 @@
                             </div>
                             <div class="form-control w-full md:w-auto">
                                 <select name="per_page" onchange="this.form.submit()" class="select select-bordered w-full">
-                                    @foreach([10, 100, 200, 500, 1000, 2000, 10000] as $p)
+                                    @foreach([100, 200, 500, 1000, 2000, 10000] as $p)
                                         <option value="{{ $p }}" @if($p == $perPage) selected @endif>{{ $p }} на странице</option>
                                     @endforeach
                                 </select>
@@ -109,16 +109,18 @@
                                         <div class="font-bold">{{ $guest->name }}</div>
                                         @if($guest->nickname)<div class="text-sm opacity-60">{{ $guest->nickname }}</div>@endif
                                     </td>
-                                    <td>{{ $guest->phone }}</td>
-                                    <td>{{ $guest->folder->name ?? '' }}</td>
-                                    <td class="text-right space-x-1">
+                                    <td>
                                         <div class="dropdown dropdown-end">
                                             <label tabindex="0" class="btn btn-primary btn-sm">Чакыруу</label>
                                             <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-[10]">
-                                                <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_one.png') }}')">Чакыруу 1</a></li>
-                                                <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_two.png') }}')">Чакыруу 2</a></li>
+                                                <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_one.jpg') }}')">Чакыруу 1</a></li>
+                                                <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_two.jpg') }}')">Чакыруу 2</a></li>
                                             </ul>
                                         </div>
+                                        {{ $guest->phone }}
+                                    </td>
+                                    <td>{{ $guest->folder->name ?? '' }}</td>
+                                    <td class="text-right space-x-1">
                                         <button @click="openGuestModal(true, {{ json_encode($guest) }})" class="btn btn-ghost btn-sm btn-square" title="Редактировать">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
                                         </button>

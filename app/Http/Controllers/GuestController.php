@@ -17,7 +17,7 @@ class GuestController extends Controller
     {
         $user = Auth::user();
         $searchQuery = $request->input('search');
-        $perPage = $request->input('per_page', 10);
+        $perPage = $request->input('per_page', 100);
         $folderId = $request->input('folder_id');
 
         // Get all folders with their guest counts for the sidebar
