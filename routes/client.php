@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GuestController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 
 Route::prefix('client')->name('client.')->middleware('auth')->group(function () {
     Route::get('/', [GuestController::class, 'index'])->name('index');
@@ -19,3 +20,12 @@ Route::prefix('client')->name('client.')->middleware('auth')->group(function () 
     // Invitation Upload Route
     Route::post('/upload-invitation', [GuestController::class, 'uploadInvitation'])->name('invitation.upload');
 });
+
+// Admin Routes
+Route::middleware(['auth', 'is_admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('index');
+        Route::get('/users/{user}/guests', [AdminController::class, 'userGuests'])->name('users.guests');
+    });

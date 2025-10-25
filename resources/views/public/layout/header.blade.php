@@ -55,6 +55,13 @@
                                 Личный кабинет
                             </a>
                         </li>
+                        @if(Auth::user()->roles()->where('name', 'admin')->exists())
+                            <li>
+                                <a href="{{ route('admin.index') }}" class="{{ request()->routeIs('admin.index') ? 'active' : '' }}">
+                                    Панель Администратора
+                                </a>
+                            </li>
+                        @endif
                         <div class="divider my-0"></div>
                         {{-- Убедитесь, что маршрут 'logout' существует --}}
                         <li><a href="{{ route('logout') }}" class="text-error hover:bg-error hover:text-white">Выйти</a></li>
@@ -75,6 +82,13 @@
                     {{-- ИСПОЛЬЗУЕМ routeIs('public.contact') --}}
                     <li><a href="{{ route('public.contact') }}" class="{{ request()->routeIs('public.contact') ? 'active font-semibold' : '' }}">Контакт</a></li>
                     <li><a href="{{ route('client.index') }}" class="{{ request()->routeIs('client.index') ? 'active font-semibold' : '' }}">Кабинет</a></li>
+                     @if(Auth::check() && Auth::user()->roles()->where('name', 'admin')->exists())
+                        <li>
+                            <a href="{{ route('admin.index') }}" class="{{ request()->routeIs('admin.index') ? 'active' : '' }}">
+                                Панель Администратора
+                            </a>
+                        </li>
+                    @endif
                     @if(!Auth::check())
                         <div class="divider my-0"></div>
                         <li><a href="{{ route('login') }}">Войти</a></li>
