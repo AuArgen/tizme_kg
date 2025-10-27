@@ -46,7 +46,7 @@
             </div>
             <div class="form-control w-full">
                 <label class="label"><span class="label-text">Папка</span></label>
-                <select name="id_folder" x-model="guestData.id_folder" class="select select-bordered w-full">
+                <select name="id_folder" x-model="guestData.id_folder" class="border w-full ">
                     <option :value="null">Без папки</option>
                     @php
                         function renderFolderOptions($folders, $prefix = '') {
