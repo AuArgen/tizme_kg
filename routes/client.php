@@ -3,6 +3,7 @@
 use App\Http\Controllers\GuestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\QuestGifController;
 
 Route::prefix('client')->name('client.')->middleware('auth')->group(function () {
     Route::get('/', [GuestController::class, 'index'])->name('index');
@@ -19,6 +20,9 @@ Route::prefix('client')->name('client.')->middleware('auth')->group(function () 
 
     // Invitation Upload Route
     Route::post('/upload-invitation', [GuestController::class, 'uploadInvitation'])->name('invitation.upload');
+
+    // QuestGif Routes
+    Route::resource('quest_gifs', QuestGifController::class);
 });
 
 // Admin Routes

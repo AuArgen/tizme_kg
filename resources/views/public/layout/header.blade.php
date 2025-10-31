@@ -33,6 +33,12 @@
                         Кабинет
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('client.quest_gifs.index') }}"
+                       class="btn btn-sm text-base-content {{ request()->routeIs('client.quest_gifs.index') ? 'btn-active bg-base-200' : '' }}">
+                        Quest Gifs
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -82,6 +88,7 @@
                     {{-- ИСПОЛЬЗУЕМ routeIs('public.contact') --}}
                     <li><a href="{{ route('public.contact') }}" class="{{ request()->routeIs('public.contact') ? 'active font-semibold' : '' }}">Контакт</a></li>
                     <li><a href="{{ route('client.index') }}" class="{{ request()->routeIs('client.index') ? 'active font-semibold' : '' }}">Кабинет</a></li>
+                    <li><a href="{{ route('client.quest_gifs.index') }}" class="{{ request()->routeIs('client.quest_gifs.index') ? 'active font-semibold' : '' }}">Quest Gifs</a></li>
                      @if(Auth::check() && Auth::user()->roles()->where('name', 'admin')->exists())
                         <li>
                             <a href="{{ route('admin.index') }}" class="{{ request()->routeIs('admin.index') ? 'active' : '' }}">
