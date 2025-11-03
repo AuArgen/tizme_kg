@@ -28,7 +28,7 @@
 <div class="modal" :class="{'modal-open': showGuestModal}">
     <div class="modal-box w-11/12 max-w-lg">
         <h3 class="font-bold text-lg" x-text="isEdit ? 'Редактировать гостя' : 'Добавить нового гостя'"></h3>
-        <form :action="isEdit ? '{{ url('client/guests') }}/' + guestData.id : '{{ route('client.guests.store') }}'" method="POST" class="py-4 space-y-4">
+        <form x-data="{loading:false}" @submit="loading = true" :action="isEdit ? '{{ url('client/guests') }}/' + guestData.id : '{{ route('client.guests.store') }}'" method="POST" class="py-4 space-y-4">
             @csrf
             <input type="hidden" name="_method" :value="isEdit ? 'PUT' : 'POST'">
 
@@ -67,7 +67,7 @@
             </div>
             <div class="modal-action">
                 <button type="button" @click="showGuestModal = false" class="btn btn-ghost">Отмена</button>
-                <button type="submit" onclick="this.disabled = true; this.textContent = 'Подождите...'; this.form.submit();" class="btn btn-primary" x-text="isEdit ? 'Сохранить' : 'Добавить'"></button>
+                <button type="submit" :disabled="loading" class="btn btn-primary" x-text="loading ? 'Подождите...' : (isEdit ? 'Сохранить' : 'Добавить')"></button>
             </div>
         </form>
         <button @click="showGuestModal = false" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
