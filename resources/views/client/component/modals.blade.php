@@ -34,20 +34,12 @@
 
             <div class="form-control w-full">
                 <label class="label"><span class="label-text">Имя</span></label>
-                <input type="text" name="name" x-model="guestData.name" class="input input-bordered w-full" required>
-            </div>
-            <div class="form-control w-full">
-                <label class="label"><span class="label-text">Телефон</span></label>
-                <input type="text" name="phone" x-model="guestData.phone" class="input input-bordered w-full" required>
-            </div>
-            <div class="form-control w-full">
-                <label class="label"><span class="label-text">Никнейм (необязательно)</span></label>
-                <input type="text" name="nickname" x-model="guestData.nickname" class="input input-bordered w-full">
+                <input type="text" name="name" placeholder="Асанбек жана Айнаш аяш" x-model="guestData.name" class="input input-bordered w-full" required>
             </div>
             <div class="form-control w-full">
                 <label class="label"><span class="label-text">Папка</span></label>
                 <select name="id_folder" x-model="guestData.id_folder" class="border w-full ">
-                    <option :value="null">Без папки</option>
+                    <option :value="null">Выберите группа</option>
                     @php
                         function renderFolderOptions($folders, $prefix = '') {
                             foreach ($folders as $folder) {
@@ -60,6 +52,14 @@
                         renderFolderOptions($folders);
                     @endphp
                 </select>
+            </div>
+            <div class="form-control w-full">
+                <label class="label"><span class="label-text">Телефон</span></label>
+                <input type="text" name="phone" x-model="guestData.phone" value="996707808909" class="input input-bordered w-full" required>
+            </div>
+            <div class="form-control w-full">
+                <label class="label"><span class="label-text">Никнейм (необязательно)</span></label>
+                <input type="text" name="nickname" x-model="guestData.nickname" class="input input-bordered w-full">
             </div>
             <div class="form-control w-full">
                 <label class="label"><span class="label-text">Доп. инфо (необязательно)</span></label>
