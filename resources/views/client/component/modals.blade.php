@@ -39,7 +39,7 @@
             <div class="form-control w-full">
                 <label class="label"><span class="label-text">Папка</span></label>
                 <select name="id_folder" x-model="guestData.id_folder" class="border w-full ">
-                    <option :value="null">Выберите группа</option>
+{{--                    <option :value="null">Выберите группа</option>--}}
                     @php
                         function renderFolderOptions($folders, $prefix = '') {
                             foreach ($folders as $folder) {
