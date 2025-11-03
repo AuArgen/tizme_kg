@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Folder;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +44,17 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+        $user = Auth::user();
+        $is_have_folder = Folder::where('id_user', $user->id)->exists();
+        if (!$is_have_folder) {
+            Folder::create([
+                'name' => 'Жалпы коноктор',
+                'info' => $request->info ?? '',
+                'id_parent' => null,
+                'id_user' => $user->id,
+            ]);
+
+        }
 
         return redirect('/');
     }
