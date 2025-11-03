@@ -114,7 +114,7 @@
                                             <label tabindex="0" class="btn btn-primary btn-sm">Чакыруу</label>
                                             <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-[10]">
                                                 @if(auth()->user()->id > 4)
-                                                    <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/invite_1.png') }}')">Чакыруу 1</a></li>
+                                                    <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/invite_2.png') }}')">Чакыруу 1</a></li>
                                                 @else
                                                     <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_one_3.jpg') }}')">Чакыруу 1</a></li>
                                                     <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_two_3.jpg') }}')">Чакыруу 2</a></li>
