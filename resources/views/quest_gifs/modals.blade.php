@@ -6,9 +6,9 @@
             @csrf
             <input type="hidden" name="_method" :value="isEdit ? 'PUT' : 'POST'">
 
-            <div class="form-control">
-                <label for="id_quest" class="label"><span class="label-text">Гость</span></label>
-                <select name="id_quest" x-model="questGifData.id_quest" class="select select-bordered w-full" required>
+            <div class="form-control w-full">
+                <label for="id_quest_modal" class="label"><span class="label-text">Гость</span></label>
+                <select id="id_quest_modal" name="id_quest" x-model="questGifData.id_quest" class="select select-bordered w-full" required>
                     <option disabled value="">Выберите гостя</option>
                     @foreach ($groupedGuests as $folderName => $guests)
                         <optgroup label="📁 {{ $folderName }}">

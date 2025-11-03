@@ -18,7 +18,6 @@ class QuestGifController extends Controller
 
         if ($searchQuery) {
             $lowerSearchQuery = strtolower($searchQuery);
-
             $matchingGuestIds = Guest::where('id_user', $user->id)
                                      ->whereRaw('LOWER(name) LIKE ?', ['%' . $lowerSearchQuery . '%'])
                                      ->pluck('id')
@@ -32,6 +31,7 @@ class QuestGifController extends Controller
 
         $questGifs = $query->latest()->paginate(10);
 
+        // Get guests and group them for the Select2 dropdown
         $guests = Guest::where('id_user', $user->id)->with('folder')->get();
         $groupedGuests = $guests->groupBy(function ($guest) {
             return $guest->folder->name ?? '(Без папки)';

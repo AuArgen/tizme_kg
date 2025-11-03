@@ -113,8 +113,12 @@
                                         <div class="dropdown dropdown-end">
                                             <label tabindex="0" class="btn btn-primary btn-sm">Чакыруу</label>
                                             <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-[10]">
-                                                <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_one_3.jpg') }}')">Чакыруу 1</a></li>
-                                                <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_two_3.jpg') }}')">Чакыруу 2</a></li>
+                                                @if(auth()->user()->id > 4)
+                                                    <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/invite_1.png') }}')">Чакыруу 1</a></li>
+                                                @else
+                                                    <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_one_3.jpg') }}')">Чакыруу 1</a></li>
+                                                    <li><a @click.prevent="openInvitationModal({{ json_encode($guest) }}, '{{ asset('assets/fon_two_3.jpg') }}')">Чакыруу 2</a></li>
+                                                @endif
                                             </ul>
                                         </div>
                                         {{ $guest->phone }}
@@ -235,10 +239,16 @@ function guestManager() {
                 ctx.textAlign = 'center';
 
                 // --- Positioning ---
-                const topMarginCm = 12.5;
+                const userId = {{auth()->user()->id}};
+                let topMarginCm = 12.5;
+                let center = 50;
+                if(userId > 4) {
+                    topMarginCm = 9;
+                    center = -30;
+                }
                 const cmToPx = 37.795;
                 const yPosition = topMarginCm * cmToPx;
-                const xPosition = canvas.width / 2 - 50;
+                const xPosition = canvas.width / 2 - center;
 
                 ctx.fillText(guestName, xPosition, yPosition);
 
