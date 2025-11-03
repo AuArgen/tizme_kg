@@ -67,7 +67,7 @@
             </div>
             <div class="modal-action">
                 <button type="button" @click="showGuestModal = false" class="btn btn-ghost">Отмена</button>
-                <button type="submit" class="btn btn-primary" x-text="isEdit ? 'Сохранить' : 'Добавить'"></button>
+                <button type="submit" onclick="this.disabled = true; this.textContent = 'Подождите...'; this.form.submit();" class="btn btn-primary" x-text="isEdit ? 'Сохранить' : 'Добавить'"></button>
             </div>
         </form>
         <button @click="showGuestModal = false" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
