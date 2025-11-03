@@ -90,7 +90,7 @@
                     </div>
 
                     {{-- Guests Table --}}
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto pb-[100px]">
                         <table class="table w-full">
                             <thead>
                                 <tr>
@@ -245,6 +245,7 @@ function guestManager() {
                 if(userId > 4) {
                     topMarginCm = 9;
                     center = -30;
+                    ctx.fillStyle = '#000';
                 }
                 const cmToPx = 37.795;
                 const yPosition = topMarginCm * cmToPx;
